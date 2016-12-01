@@ -1,7 +1,7 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 <suite name="EC-TEST" verbose="2">
     <listeners>
-		<listener class-name="listeners.TestInvocationListerner" />
+		<listener class-name="listeners.HtmlReporter" />
 	</listeners>
   <test name="Login" >
       <classes>
