@@ -7,6 +7,7 @@ import org.testng.ISuite;
 import org.testng.xml.XmlSuite;
 
 public class HtmlReporter implements IReporter {
+
 /**
  * Generates the custom reports
  * @param {List<XmlSuite>} xmlSuite
