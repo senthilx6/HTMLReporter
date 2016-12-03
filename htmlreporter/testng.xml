@@ -5,7 +5,7 @@
 	</listeners>
   <test name="Login" >
       <classes>
-          <class name="login.LoginTestIT"></class>
+          <class name="testcases.SampleTest"></class>
       </classes>
   </test>
 </suite>

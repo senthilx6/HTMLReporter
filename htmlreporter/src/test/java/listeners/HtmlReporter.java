@@ -7,6 +7,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
+import java.util.Map;
 
 import org.testng.IReporter;
 import org.testng.ISuite;
@@ -37,6 +38,7 @@ public class HtmlReporter implements IReporter {
 			endHTML(writer);
 			createTitleContent(writer);
 			createTotalTest(writer);
+			createTotalTime(writer);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -110,20 +112,11 @@ writer.write(label);
 /**
  * 
  * @param writer
- */
-private void createSubContent(BufferedWriter writer){
-	
-	
-}
-
-/**
- * 
- * @param writer
  * @throws IOException 
  */
 private void createTotalTest(BufferedWriter writer) throws IOException{
 //Creates the layout
-	String layout = "<div style ='height: 50px;width: inherit;'>";
+	String layout = "<div style ='height: 100px;width: inherit;'>";
 	// Creates the child div
 	String displayTotalTestLayout = "<div style='width: 260px;background-color: #293d3d;height: 85px;position: absolute;top: 67px;'>";
 	
@@ -160,5 +153,30 @@ private void createTotalTestMethod(BufferedWriter writer) throws IOException
 writer.write(parent+content+total);
 }
 
+private void createTotalTime (BufferedWriter writer) throws IOException 
+{
+	Map <String,String> dataMap = data.getTotalTime();
+	String parent = "<div style='width: 260px;background-color: #293d3d;height: 85px;position: absolute;top: 67px;left: 281px;'>";
+	String subChild = "<label style='position: absolute;margin-top: 5px;'>";
+	String totalTimeLabel = "<span style='font-weight: bold;color: white;padding-left: 8px;'>Total Time</span></label>";
+	String subChild1 = "<label style='margin-top: 57px;position: absolute;'>";
+	String totatlTime = "<span style='font-weight: bold;color: white;padding-left: 8px;'>"+dataMap.get("total-time")+"</span></label></div>";
+writer.write(parent+subChild+totalTimeLabel+subChild1+totatlTime);
+
+String startTimePanel = "<div style='width: 260px;background-color: #1aff1a;height: 85px;position: absolute;top: 67px;left: 554px;'>";
+String labelTime = "<label style='position: absolute;margin-left: 8px;'>";
+String startTimeLabel = "<span style='font-weight: bold;color: gray;padding-top: 3px;'>Start Time</span></label>";
+String timeContainer = "<label style='position: absolute;margin-top: 58px;padding-left: 118px;font-weight: bold;color: white;'><span>";
+String startTime = dataMap.get("start-time")+"</span></label></div>";
+writer.write(startTimePanel+labelTime+startTimeLabel+timeContainer+startTime);
+
+String endTimePanel = "<div style='width: 260px;background-color: #ff3333;height: 85px;position: absolute;top: 67px;left: 828px;'>";
+String endlabelTime = "<label style='position: absolute;margin-left: 8px;'>";
+String endTimeLabel = "<span style='font-weight: bold;color: gray;padding-top: 3px;'>End Time</span></label>";
+String endTimeContainer = "<label style='position: absolute;margin-top: 58px;padding-left: 118px;font-weight: bold;color: white;'><span>";
+String endTime = dataMap.get("end-time")+"</span></label></div>";
+writer.write(endTimePanel+endlabelTime+endTimeLabel+endTimeContainer+endTime);
+
+}
 
 }
