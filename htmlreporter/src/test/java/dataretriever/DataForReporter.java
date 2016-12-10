@@ -100,4 +100,33 @@ return dateValues;
 		return total;
 	}
 
+	public int getNumberofTestPassed()
+	{
+int count = 0;
+		for(ISuiteResult results: suite.getResults().values())
+		{
+			count +=	results.getTestContext().getPassedTests().getAllResults().size();
+		}
+		return count;
+	}
+	
+	public int getNumberofTestFailed()
+	{
+		int count = 0;
+		for(ISuiteResult results: suite.getResults().values())
+		{
+			count +=	results.getTestContext().getFailedTests().getAllResults().size();
+		}
+		return count;	
+	}
+	
+	public int getNumberofTestSkipped()
+	{
+		int count = 0;
+		for(ISuiteResult results: suite.getResults().values())
+		{
+			count +=	results.getTestContext().getSkippedTests().getAllResults().size();
+		}
+		return count;
+	}
 }

@@ -39,6 +39,7 @@ public class HtmlReporter implements IReporter {
 			createTitleContent(writer);
 			createTotalTest(writer);
 			createTotalTime(writer);
+			createChart(writer);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -79,7 +80,7 @@ return bufferWriter;
 	 */
 	private void createHTML(BufferedWriter writer) throws IOException
 	{
-		String startHead ="<html><head></head><body style='background-color: #141F1F;''>" ;
+		String startHead ="<html><head></head><script src='https://d3js.org/d3.v4.min.js'></script><body style='background-color: #141F1F;''>" ;
 		writer.write(startHead);
 	}
 	
@@ -179,4 +180,70 @@ writer.write(endTimePanel+endlabelTime+endTimeLabel+endTimeContainer+endTime);
 
 }
 
+/**
+ * Creates a BarChart
+ * @param writer
+ * @throws IOException 
+ */
+private void createChart(BufferedWriter writer) throws IOException
+{
+	String container = "<div style ='height: 50px;"+
+    "width: inherit;'><div style='width: 533px;background-color: #293d3d;height: 300px;position: absolute;top: 165px;'>";
+	writer.write(container);
+	String svgElement = "<svg id ='bar-chart' width='500' height='280'></svg>";
+	writer.write(container);
+	writer.write(svgElement);
+	writer.write(generateChart());
+	String closeContainer = "</div></div>";
+	writer.write(closeContainer);
+}
+
+/**
+ * 
+ * @return chartScript
+ */
+private String generateChart()
+{
+	int passedTestCount = data.getNumberofTestPassed();
+	int skippedTestCount = data.getNumberofTestSkipped();
+	int failedTestCount = data.getNumberofTestFailed();
+	
+	
+	String script = "<script>var svg = d3.select('svg'),"+
+	    "margin = {top: 30, right: 20, bottom: 20, left: 50},"+
+	    "width = +svg.attr('width') - margin.left - margin.right,"+
+	    "height = +svg.attr('height') - margin.top - margin.bottom;"+
+         "var x = d3.scaleBand().range([0, 450]),"+
+	    "y = d3.scaleLinear().rangeRound([230, 0]);"+
+"var g = svg.append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');"+
+
+	"var data = [{'name':'Passed','value':"+passedTestCount+"},{'name':'Failed','value':"+failedTestCount+"},{'name':'Skipped','value':"+skippedTestCount+"}];"+
+
+	"var max = 0;"+
+	"var index = 0;"+
+	"for(index=0;index<data.length;index++) {"+
+	"if(max<data[index]['value']) {"+
+	    "max = data[index]['value']; } }"+
+      "max = max%2 ==0? max : max +1;"+
+"x.domain(data.map(function(d) { return d.name; }));"+
+	  "y.domain([0, max]);"+
+	"g.append('g').attr('class', 'axis axis--x')"+
+	     ".attr('transform', 'translate(0,' + height + ')')"+
+".call(d3.axisBottom(x)).attr('stroke', '#F9F9F9');"+
+"g.append('g').attr('class', 'axis axis--y')"+
+	      ".call(d3.axisLeft(y).ticks(3)).attr('stroke', '#F9F9F9')"+
+	    ".append('text').attr('transform', 'rotate(-90)').attr('y', 6)"+
+	      ".attr('dy', '0.71em').attr('text-anchor', 'end');"+
+	"d3.selectAll('line').attr('stroke', '#F9F9F9');"+
+	"d3.selectAll('path').attr('stroke', '#F9F9F9');"+
+"var temp=0;"+
+	 "g.selectAll('.bar').data(data).enter().append('rect').attr('class', 'bar')"+
+	      ".attr('x', function(d) {return x(d.name)+50; })"+
+	      ".attr('y', function(d) { return y(d.value); })"+
+	      ".attr('width', 50)"+
+	      ".attr('height', function(d) { return height - y(d.value); }).attr('fill','#ff9900')"+
+	      ".attr('data-name',function(d){return d.name})"+
+	      ".attr('data-value',function(d){return d.value});</script>";
+return script;
+}
 }
