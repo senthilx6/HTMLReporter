@@ -21,111 +21,99 @@ import org.testng.xml.XmlSuite;
 public class DataForReporter {
 	ISuite suite;
 	XmlSuite xml;
-/**
- * 
- * @param suite
- */
+
+	/**
+	 * 
+	 * @param suite
+	 */
 	public DataForReporter(ISuite suite, XmlSuite xml) {
 		// TODO Auto-generated constructor stub
-		this.suite = suite; 
+		this.suite = suite;
 		this.xml = xml;
-		
+
 	}
-	
-	public String getSuiteName()
-	{
+
+	public String getSuiteName() {
 		return suite.getName();
 	}
-	
-	public int getNumberOfTestTags()
-	{
+
+	public int getNumberOfTestTags() {
 		return xml.getTests().size();
 	}
-	
-	public int getNumberOfTest()
-	{
+
+	public int getNumberOfTest() {
 		return suite.getAllMethods().size();
 	}
-	
-	public Map<String,String> getTotalTime()
-	{
-		Map<String,String> dateValues = new HashMap<String,String>();
+
+	public Map<String, String> getTotalTime() {
+		Map<String, String> dateValues = new HashMap<String, String>();
 		String pattern = "dd-MM-yyyy HH:mm:ss";
 		String startTime = new String();
 		Date startDate = null;
 		Date endDate = null;
 		SimpleDateFormat format = new SimpleDateFormat(pattern);
 
-	for(ISuiteResult result : suite.getResults().values())
-	{
-		 startDate = result.getTestContext().getStartDate();
-		 endDate = result.getTestContext().getEndDate();
-		
-	}
-	
-long differnces = 	endDate.getTime() - startDate.getTime();
-System.out.println(differnces);
-totalTimeCaluator(differnces);
-dateValues.put("start-time", format.format(startDate));
-dateValues.put("end-time", format.format(endDate));
-dateValues.put("total-time", totalTimeCaluator(differnces));
-return dateValues; 
-		
+		for (ISuiteResult result : suite.getResults().values()) {
+			startDate = result.getTestContext().getStartDate();
+			endDate = result.getTestContext().getEndDate();
+
+		}
+
+		long differnces = endDate.getTime() - startDate.getTime();
+		System.out.println(differnces);
+		totalTimeCaluator(differnces);
+		dateValues.put("start-time", format.format(startDate));
+		dateValues.put("end-time", format.format(endDate));
+		dateValues.put("total-time", totalTimeCaluator(differnces));
+		return dateValues;
+
 	}
 
-	private String totalTimeCaluator(long differnces)
-	{
+	private String totalTimeCaluator(long differnces) {
 		long diffSeconds = differnces / 1000 % 60;
 		long diffMinutes = differnces / (60 * 1000) % 60;
 		long diffHours = differnces / (60 * 60 * 1000) % 24;
 		long diffDays = differnces / (24 * 60 * 60 * 1000);
-		String total ="";
-		if(diffDays>0)
-		{
-			total += diffDays+" days";
+		String total = "";
+		if (diffDays > 0) {
+			total += diffDays + " days";
 		}
-		if(diffHours>0)
-		{
-			total += diffHours+" hours";
+		if (diffHours > 0) {
+			total += diffHours + " hours";
 		}
-		if(diffMinutes>0)
-		{
-			total += diffMinutes+" min";
+		if (diffMinutes > 0) {
+			total += diffMinutes + " min";
 		}
-		if(diffSeconds>0)
-		{
-			total += diffSeconds+" secs";
+		if (diffSeconds > 0) {
+			total += diffSeconds + " secs";
 		}
-		System.out.println("total"+total);
+		System.out.println("total" + total);
 		return total;
 	}
 
-	public int getNumberofTestPassed()
-	{
-int count = 0;
-		for(ISuiteResult results: suite.getResults().values())
-		{
-			count +=	results.getTestContext().getPassedTests().getAllResults().size();
+	public int getNumberofTestPassed() {
+		int count = 0;
+		for (ISuiteResult results : suite.getResults().values()) {
+			count += results.getTestContext().getPassedTests().getAllResults()
+					.size();
 		}
 		return count;
 	}
-	
-	public int getNumberofTestFailed()
-	{
+
+	public int getNumberofTestFailed() {
 		int count = 0;
-		for(ISuiteResult results: suite.getResults().values())
-		{
-			count +=	results.getTestContext().getFailedTests().getAllResults().size();
+		for (ISuiteResult results : suite.getResults().values()) {
+			count += results.getTestContext().getFailedTests().getAllResults()
+					.size();
 		}
-		return count;	
+		return count;
 	}
-	
-	public int getNumberofTestSkipped()
-	{
+
+	public int getNumberofTestSkipped() {
 		int count = 0;
-		for(ISuiteResult results: suite.getResults().values())
-		{
-			count +=	results.getTestContext().getSkippedTests().getAllResults().size();
+		for (ISuiteResult results : suite.getResults().values()) {
+			count += results.getTestContext().getSkippedTests().getAllResults()
+					.size();
 		}
 		return count;
 	}

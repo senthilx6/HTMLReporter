@@ -8,42 +8,35 @@ import org.testng.annotations.Test;
 
 //Used to Check the format of the report that is going to be generated
 
-
 public class SampleTest {
 
-	
 	@BeforeSuite
-	public void beforeSuit()
-	{
-		
+	public void beforeSuit() {
+
 	}
-	
+
 	@BeforeClass
-	public void beforeClass()
-	{
-		
+	public void beforeClass() {
+
 	}
-	
+
 	@BeforeTest
-	public void beforeTest()
-	{
-		
+	public void beforeTest() {
+
 	}
-	
+
 	@BeforeMethod
-	public void beforeMethod()
-	{
-		
+	public void beforeMethod() {
+
 	}
+
 	@Test
-	public void test()
-	{
-		
+	public void test() {
+
 	}
-	
+
 	@Test
-	public void test2()
-	{
+	public void test2() {
 		try {
 			Thread.sleep(5000);
 		} catch (InterruptedException e) {
