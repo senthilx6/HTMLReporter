@@ -10,17 +10,19 @@ import java.lang.annotation.Target;
 public @interface TestCaseInfo {
 	String id();
 
-	public enum severity {
+	public enum Severity {
 		HIGH("high"), MEDIUN("medium"), LOW("low");
-
-		final String severity;
-
-		severity(String severity) {
-			this.severity = severity;
-		}
-
-		public String toString() {
-			return severity;
-		}
+		
+	final String severity;
+	Severity(String severity)
+	{
+	this.severity = severity;	
 	}
+
+	 public String severity()
+	{
+		return this.severity;
+	}
+}
+	Severity severity();
 }

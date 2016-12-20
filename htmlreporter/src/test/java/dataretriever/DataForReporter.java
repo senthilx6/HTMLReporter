@@ -87,7 +87,6 @@ public class DataForReporter {
 		if (diffSeconds > 0) {
 			total += diffSeconds + " secs";
 		}
-		System.out.println("total" + total);
 		return total;
 	}
 
