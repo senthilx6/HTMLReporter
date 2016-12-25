@@ -1,21 +1,17 @@
 package dataretriever;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
+
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
+
 import java.util.Map;
-import java.util.stream.Collectors;
 
-import javax.naming.spi.DirStateFactory.Result;
 
-import org.apache.regexp.recompile;
+
 import org.testng.ISuite;
 import org.testng.ISuiteResult;
-import org.testng.ITestContext;
+
 import org.testng.xml.XmlSuite;
 
 public class DataForReporter {
@@ -48,7 +44,6 @@ public class DataForReporter {
 	public Map<String, String> getTotalTime() {
 		Map<String, String> dateValues = new HashMap<String, String>();
 		String pattern = "dd-MM-yyyy HH:mm:ss";
-		String startTime = new String();
 		Date startDate = null;
 		Date endDate = null;
 		SimpleDateFormat format = new SimpleDateFormat(pattern);
@@ -69,7 +64,7 @@ public class DataForReporter {
 
 	}
 
-	private String totalTimeCaluator(long differnces) {
+	protected static String totalTimeCaluator(long differnces) {
 		long diffSeconds = differnces / 1000 % 60;
 		long diffMinutes = differnces / (60 * 1000) % 60;
 		long diffHours = differnces / (60 * 60 * 1000) % 24;

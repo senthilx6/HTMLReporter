@@ -1,11 +1,10 @@
 package listeners;
 
-import java.awt.image.TileObserver;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
 
@@ -13,7 +12,9 @@ import org.testng.IReporter;
 import org.testng.ISuite;
 import org.testng.xml.XmlSuite;
 
+import vo.ResultVo;
 import dataretriever.DataForReporter;
+import dataretriever.ResultTable;
 
 public class HtmlReporter implements IReporter {
 	/**
@@ -42,6 +43,8 @@ public class HtmlReporter implements IReporter {
 			createTotalTest(writer);
 			createTotalTime(writer);
 			createChart(writer);
+			createTable(writer);
+			writeTableContents(writer,isuite);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -82,10 +85,28 @@ public class HtmlReporter implements IReporter {
 	 * @throws IOException
 	 */
 	private void createHTML(BufferedWriter writer) throws IOException {
-		String startHead = "<html><head></head><script src='https://d3js.org/d3.v4.min.js'></script><body style='background-color: #141F1F;''>";
+		String startHead = "<html><head>" // I have used roberto font,Please link the appropriate font
+				+ "<link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>"
+				+cssFileForHtml()
+				+ "</head><script src='https://d3js.org/d3.v4.min.js'></script><body style='background-color: #141F1F;''>";
 		writer.write(startHead);
 	}
 
+	private String cssFileForHtml()
+	{
+		return "<style>table, td, th {"+    
+		    "border: 1px solid #ddd;"+
+	    "text-align: left;}"+
+	"table {"+
+	    "border-collapse: collapse;"+
+	    "width: 100%;}"+
+	"th, td {"+
+	    "padding: 15px;"+
+	    "color:white;"+
+	    "font-family: 'Roboto', sans-serif;}td{"+
+	    "font-size: smaller;}</style>";
+	}
+	
 	/**
 	 * Used to finish the HTML
 	 * 
@@ -106,7 +127,8 @@ public class HtmlReporter implements IReporter {
 	private void createTitleContent(BufferedWriter writer) throws IOException {
 		String title = data.getSuiteName();
 		String titleTag = "<div style='height: 50px; width: inherit;background-color: #293d3d;'>";
-		String label = "<label style='font-weight: bold;position: absolute;padding-left: 16px;color: white;padding-top: 8px;'>"
+		String label = "<label style='font-weight: bold;position: absolute;padding-left: 16px;color: white;padding-top: 8px;"
+				+ "font-family: Roboto, sans-serif;'>"
 				+ title + "</label></div>";
 		writer.write(titleTag);
 		writer.write(label);
@@ -138,8 +160,8 @@ public class HtmlReporter implements IReporter {
 	 */
 	private void createTotalTestCase(BufferedWriter writer) throws IOException {
 		String parent = "<label style='margin-top: 8px;position: absolute;'>";
-		String content = "<span style='display: inline;color: white;margin-left: 8px;font-weight: bold;'>Total TestCases</span>";
-		String total = "<span style='display: inline;color: white;margin-left: 100px;font-weight: bold;'>"
+		String content = "<span style='display: inline;color: white;margin-left: 8px;font-weight: bold;font-family: Roboto, sans-serif;'>Total TestCases</span>";
+		String total = "<span style='display: inline;color: white;margin-left: 100px;font-weight: bold;font-family: Roboto, sans-serif;'>"
 				+ data.getNumberOfTestTags() + "</span></label>";
 		writer.write(parent + content + total);
 	}
@@ -152,8 +174,8 @@ public class HtmlReporter implements IReporter {
 	private void createTotalTestMethod(BufferedWriter writer)
 			throws IOException {
 		String parent = "<label style='position: inherit;top: 57px;'>";
-		String content = "<span style='color: white;font-weight: bold;padding-left: 8px;'>Total TestMethod</span>";
-		String total = "<span style='margin-left: 83px;color: white;font-weight: bold;''>"
+		String content = "<span style='color: white;font-weight: bold;padding-left: 8px;font-family: Roboto, sans-serif;'>Total TestMethod</span>";
+		String total = "<span style='margin-left: 83px;color: white;font-weight: bold;font-family: Roboto, sans-serif;'>"
 				+ data.getNumberOfTest() + "</span></label>";
 		writer.write(parent + content + total);
 	}
@@ -162,25 +184,25 @@ public class HtmlReporter implements IReporter {
 		Map<String, String> dataMap = data.getTotalTime();
 		String parent = "<div style='width: 260px;background-color: #293d3d;height: 85px;position: absolute;top: 67px;left: 281px;'>";
 		String subChild = "<label style='position: absolute;margin-top: 5px;'>";
-		String totalTimeLabel = "<span style='font-weight: bold;color: white;padding-left: 8px;'>Total Time</span></label>";
+		String totalTimeLabel = "<span style='font-weight: bold;color: white;padding-left: 8px;font-family: Roboto, sans-serif;'>Total Time</span></label>";
 		String subChild1 = "<label style='margin-top: 57px;position: absolute;'>";
-		String totatlTime = "<span style='font-weight: bold;color: white;padding-left: 8px;'>"
+		String totatlTime = "<span style='font-weight: bold;color: white;padding-left: 8px;font-family: Roboto, sans-serif;'>"
 				+ dataMap.get("total-time") + "</span></label></div>";
 		writer.write(parent + subChild + totalTimeLabel + subChild1
 				+ totatlTime);
 
-		String startTimePanel = "<div style='width: 260px;background-color: #1aff1a;height: 85px;position: absolute;top: 67px;left: 554px;'>";
+		String startTimePanel = "<div style='width: 260px;background-color: #00E676;height: 85px;position: absolute;top: 67px;left: 554px;'>";
 		String labelTime = "<label style='position: absolute;margin-left: 8px;'>";
-		String startTimeLabel = "<span style='font-weight: bold;color: gray;padding-top: 3px;'>Start Time</span></label>";
-		String timeContainer = "<label style='position: absolute;margin-top: 58px;padding-left: 118px;font-weight: bold;color: white;'><span>";
+		String startTimeLabel = "<span style='font-weight: bold;color: gray;padding-top: 3px;font-family: Roboto, sans-serif;'>Start Time</span></label>";
+		String timeContainer = "<label style='position: absolute;margin-top: 58px;padding-left: 118px;font-weight: bold;color: white;'><span style='font-family: Roboto, sans-serif;font-size:smaller'>";
 		String startTime = dataMap.get("start-time") + "</span></label></div>";
 		writer.write(startTimePanel + labelTime + startTimeLabel
 				+ timeContainer + startTime);
 
-		String endTimePanel = "<div style='width: 260px;background-color: #ff3333;height: 85px;position: absolute;top: 67px;left: 828px;'>";
+		String endTimePanel = "<div style='width: 260px;background-color: #F44336;height: 85px;position: absolute;top: 67px;left: 828px;'>";
 		String endlabelTime = "<label style='position: absolute;margin-left: 8px;'>";
-		String endTimeLabel = "<span style='font-weight: bold;color: gray;padding-top: 3px;'>End Time</span></label>";
-		String endTimeContainer = "<label style='position: absolute;margin-top: 58px;padding-left: 118px;font-weight: bold;color: white;'><span>";
+		String endTimeLabel = "<span style='font-weight: bold;color: gray;padding-top: 3px;font-family: Roboto, sans-serif;'>End Time</span></label>";
+		String endTimeContainer = "<label style='position: absolute;margin-top: 58px;padding-left: 118px; font-weight: bold;color: white;'><span style='font-family: Roboto, sans-serif;font-size:smaller'>";
 		String endTime = dataMap.get("end-time") + "</span></label></div>";
 		writer.write(endTimePanel + endlabelTime + endTimeLabel
 				+ endTimeContainer + endTime);
@@ -194,14 +216,12 @@ public class HtmlReporter implements IReporter {
 	 * @throws IOException
 	 */
 	private void createChart(BufferedWriter writer) throws IOException {
-		String container = "<div style ='height: 50px;"
-				+ "width: inherit;'><div style='width: 533px;background-color: #293d3d;height: 300px;position: absolute;top: 165px;'>";
+		String container = "<div style='width: 533px;background-color: #293d3d;height: 300px;position: absolute;top: 165px;'>";
 		writer.write(container);
 		String svgElement = "<svg id ='bar-chart' width='500' height='280'></svg>";
-		writer.write(container);
 		writer.write(svgElement);
 		writer.write(generateChart());
-		String closeContainer = "</div></div>";
+		String closeContainer = "</div>";
 		writer.write(closeContainer);
 	}
 
@@ -259,4 +279,35 @@ public class HtmlReporter implements IReporter {
 				+ ".attr('data-value',function(d){return d.value});</script>";
 		return script;
 	}
+	
+	private void createTable(BufferedWriter writer) throws IOException
+	{
+String container = "<div style='width: 766px;background-color: #293d3d;height: 300px;position: absolute;top: 165px;left: 554px'>";
+String table = "<table style='top:10px;position:absolute;width: 750px;left:8px;'><tbody>";
+String headers ="<tr><th>Method Name</th><th>Servrity</th><th>Time Taken</th><th>Result</th></tr>";
+
+writer.write(container+table+headers);
+
+	}
+	
+private void writeTableContents(BufferedWriter writer,ISuite suite)	 throws IOException
+{
+	ResultTable table = new ResultTable();
+	Map<String, ResultVo> dataMap = table.getEntireTableData(suite);
+	String closer = "</tbody></table></div>";
+	dataMap.forEach((key,value)->{
+		String datagenerator = "";
+		datagenerator= "<tr><td>"+value.getMethodName()+"</td><td>"+value.getPrioirty()+"</td><td>"+value.getTotalTime()+"</td>";
+		datagenerator += value.getResult()=="pass" ? "<td style='color:#00E676'>"+value.getResult()+"</td>" : "<td style='color:#F44336'>"+value.getResult()+"</td></tr>";
+		try {
+			writer.write(datagenerator);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	});
+	writer.write(closer);	
+}
+	
+	
 }

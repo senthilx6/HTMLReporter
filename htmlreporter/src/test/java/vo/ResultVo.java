@@ -11,6 +11,26 @@ public class ResultVo {
 	private String EndTime;
 	
 	private String prioirty;
+	
+	private String totalTime;
+	
+	private String result;
+
+	public String getResult() {
+		return result;
+	}
+
+	public void setResult(String result) {
+		this.result = result;
+	}
+
+	public String getTotalTime() {
+		return totalTime;
+	}
+
+	public void setTotalTime(String totalTime) {
+		this.totalTime = totalTime;
+	}
 
 	public String getPrioirty() {
 		return prioirty;

@@ -1,14 +1,11 @@
 package dataretriever;
 
-import java.util.LinkedList;
+import java.util.HashMap;
 import java.util.List;
 
-
-
-
+import java.util.Map;
 
 import org.testng.ISuite;
-
 
 import org.testng.ITestNGMethod;
 import org.testng.ITestResult;
@@ -19,55 +16,64 @@ import vo.ResultVo;
 
 public class ResultTable {
 
-	List<ResultVo> dataList; 
+
 	/**
 	 * 
 	 * @param suite
-	 * @return
 	 */
-	public List<ResultVo> generateTableData(ISuite suite)
-	{
-	suite.getAllMethods().stream().forEach(methods->{
-		ResultVo value = new ResultVo();
-		String methodName = methods.getConstructorOrMethod().getMethod().getName();
-		TestCaseInfo caseInfo =  methods.getConstructorOrMethod().getClass().getAnnotation(TestCaseInfo.class);
-	value.setTestCaeId(caseInfo.id());
-	value.setMethodName(methodName);
-	value.setPrioirty(caseInfo.severity().severity());
-	});
-		return dataList;
-	}
-/**
- * 	
- * @param suite
- */
-	public void generateStartAndEndTime(ISuite suite)
-	{
-		
-		suite.getAllInvokedMethods().stream().forEach(invokedMethods->{
-			ResultVo value = new ResultVo();
-	ITestNGMethod method =		invokedMethods.getTestResult().getMethod();
-	ConstructorOrMethod cons = method.getConstructorOrMethod();
-	TestCaseInfo caseInfo =  cons.getClass().getAnnotation(TestCaseInfo.class);
-	value.setTestCaeId(caseInfo.id());
-	value.setMethodName(method.getMethodName());
-	value.setPrioirty(caseInfo.severity().severity());
-ITestResult result = invokedMethods.getTestResult();
-value.setStartTime(this.convertDate(result.getStartMillis()));
-value.setStartTime(this.convertDate(result.getEndMillis()));
-	
-		});
+	private Map<String, ResultVo> generateTableData(ISuite suite) {
+		Map<String, ResultVo> dataMap = new HashMap<String, ResultVo>();
+		suite.getAllMethods()
+				.forEach(
+						invokedMethods -> {
+							ResultVo value = new ResultVo();
+							String methodName = invokedMethods.getMethodName();
+							ConstructorOrMethod cons = invokedMethods.getConstructorOrMethod();
+							TestCaseInfo caseInfo = cons.getMethod()
+									.getAnnotation(TestCaseInfo.class);
+							value.setTestCaeId(caseInfo.id());
+							value.setMethodName(methodName);
+							value.setPrioirty(caseInfo.severity().severity());
+							dataMap.put(methodName, value);
+						});
+		return dataMap;
 	}
 	
 	/**
 	 * 
-	 * @param milliSeconds
-	 * @return
+	 * @param suite
 	 */
-	private String convertDate(Long milliSeconds)
+	public Map<String, ResultVo> getEntireTableData(ISuite suite)
 	{
-		String convertedTime = "";
-		
-		return convertedTime;
+		Map<String, ResultVo>	dataMap = 	this.generateTableData(suite);
+		suite.getAllInvokedMethods().stream().forEach(methods->{
+			
+			if (dataMap.containsKey(methods.getTestMethod().getMethodName()))
+			{
+				ResultVo vo = dataMap.get(methods.getTestMethod().getMethodName());
+				long startMilliSeconds = methods.getTestResult().getStartMillis();
+				vo.setStartTime(DataForReporter.totalTimeCaluator(startMilliSeconds));
+				long endMilliSeconds = methods.getTestResult().getEndMillis();
+				vo.setEndTime(DataForReporter.totalTimeCaluator(endMilliSeconds));
+				String status = null;
+				switch(methods.getTestResult().getStatus())
+				{
+				case ITestResult.SUCCESS:
+					status = "pass";
+					break;
+case ITestResult.FAILURE:
+					status = "fail";
+					break;
+case ITestResult.SKIP:
+status = "skip";
+break;
+					
+				}
+				vo.setResult(status);
+	long difference = endMilliSeconds - startMilliSeconds;
+	vo.setTotalTime(DataForReporter.totalTimeCaluator(difference));		
+			}
+		});
+		return dataMap;
 	}
 }
