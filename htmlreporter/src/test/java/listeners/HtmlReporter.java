@@ -305,7 +305,6 @@ private void writeTableContents(BufferedWriter writer,ISuite suite , ResultTable
 		try {
 			writer.write(datagenerator);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	});
