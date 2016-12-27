@@ -18,6 +18,10 @@ public class ResultTable {
 
 	private ISuite suite = null;
 	
+	/**
+	 * 
+	 * @param suite
+	 */
 	public ResultTable(ISuite suite) {
 		this.suite = suite;
 	}
