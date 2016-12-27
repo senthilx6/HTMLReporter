@@ -2,11 +2,9 @@ package dataretriever;
 
 import java.util.HashMap;
 import java.util.List;
-
 import java.util.Map;
 
 import org.testng.ISuite;
-
 import org.testng.ITestNGMethod;
 import org.testng.ITestResult;
 import org.testng.internal.ConstructorOrMethod;
@@ -16,13 +14,20 @@ import vo.ResultVo;
 
 public class ResultTable {
 
+	private HashMap<String, ResultVo> dataMap = null;
+
+	private ISuite suite = null;
+	
+	public ResultTable(ISuite suite) {
+		this.suite = suite;
+	}
 
 	/**
 	 * 
 	 * @param suite
 	 */
-	private Map<String, ResultVo> generateTableData(ISuite suite) {
-		Map<String, ResultVo> dataMap = new HashMap<String, ResultVo>();
+	private void generateTableData() {
+		dataMap = new HashMap<String, ResultVo>();
 		suite.getAllMethods()
 				.forEach(
 						invokedMethods -> {
@@ -36,16 +41,15 @@ public class ResultTable {
 							value.setPrioirty(caseInfo.severity().severity());
 							dataMap.put(methodName, value);
 						});
-		return dataMap;
 	}
 	
 	/**
 	 * 
 	 * @param suite
 	 */
-	public Map<String, ResultVo> getEntireTableData(ISuite suite)
+	protected void getEntireTableData()
 	{
-		Map<String, ResultVo>	dataMap = 	this.generateTableData(suite);
+		this.generateTableData();
 		suite.getAllInvokedMethods().stream().forEach(methods->{
 			
 			if (dataMap.containsKey(methods.getTestMethod().getMethodName()))
@@ -74,6 +78,32 @@ break;
 	vo.setTotalTime(DataForReporter.totalTimeCaluator(difference));		
 			}
 		});
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public  Map<String, ResultVo> getResultData()
+	{
 		return dataMap;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public  int getDataCount()
+	{
+		return dataMap.size();
+	}
+	
+	
+	/**
+	 * 
+	 */
+	public void processData()
+	{
+		this.getEntireTableData();
 	}
 }

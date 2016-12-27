@@ -43,8 +43,10 @@ public class HtmlReporter implements IReporter {
 			createTotalTest(writer);
 			createTotalTime(writer);
 			createChart(writer);
-			createTable(writer);
-			writeTableContents(writer,isuite);
+			ResultTable table = new ResultTable(isuite);
+			table.processData();
+			createTable(writer , table);
+			writeTableContents(writer,isuite,table);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -280,9 +282,10 @@ public class HtmlReporter implements IReporter {
 		return script;
 	}
 	
-	private void createTable(BufferedWriter writer) throws IOException
+	private void createTable(BufferedWriter writer, ResultTable tableData) throws IOException
 	{
-String container = "<div style='width: 766px;background-color: #293d3d;height: 300px;position: absolute;top: 165px;left: 554px'>";
+		int height = (47*tableData.getDataCount())+67;
+String container = "<div style='width: 766px;background-color: #293d3d;height: "+height+"px;position: absolute;top: 165px;left: 554px'>";
 String table = "<table style='top:10px;position:absolute;width: 750px;left:8px;'><tbody>";
 String headers ="<tr><th>Method Name</th><th>Servrity</th><th>Time Taken</th><th>Result</th></tr>";
 
@@ -290,10 +293,10 @@ writer.write(container+table+headers);
 
 	}
 	
-private void writeTableContents(BufferedWriter writer,ISuite suite)	 throws IOException
+private void writeTableContents(BufferedWriter writer,ISuite suite , ResultTable table)	 throws IOException
 {
-	ResultTable table = new ResultTable();
-	Map<String, ResultVo> dataMap = table.getEntireTableData(suite);
+	
+	Map<String, ResultVo> dataMap = table.getResultData();
 	String closer = "</tbody></table></div>";
 	dataMap.forEach((key,value)->{
 		String datagenerator = "";
