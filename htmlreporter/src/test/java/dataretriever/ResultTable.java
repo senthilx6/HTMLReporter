@@ -40,15 +40,23 @@ public class ResultTable {
 							ConstructorOrMethod cons = invokedMethods.getConstructorOrMethod();
 							TestCaseInfo caseInfo = cons.getMethod()
 									.getAnnotation(TestCaseInfo.class);
+							if(caseInfo !=null){
 							value.setTestCaeId(caseInfo.id());
-							value.setMethodName(methodName);
+							
 							value.setPrioirty(caseInfo.severity().severity());
+							}
+							else
+							{
+								value.setTestCaeId("-");
+								value.setPrioirty("-");	
+							}
+							value.setMethodName(methodName);
 							dataMap.put(methodName, value);
 						});
 	}
 	
 	/**
-	 * 
+	 *  Sets the total time and status of the test case
 	 * @param suite
 	 */
 	protected void getEntireTableData()
@@ -85,7 +93,7 @@ break;
 	}
 	
 	/**
-	 * 
+	 * gets the result data
 	 * @return
 	 */
 	public  Map<String, ResultVo> getResultData()
@@ -94,7 +102,7 @@ break;
 	}
 	
 	/**
-	 * 
+	 *  returns the size of the data count
 	 * @return
 	 */
 	public  int getDataCount()
@@ -104,7 +112,7 @@ break;
 	
 	
 	/**
-	 * 
+	 *  does the calculation for the process data
 	 */
 	public void processData()
 	{
