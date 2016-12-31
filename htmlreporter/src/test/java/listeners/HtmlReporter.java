@@ -15,13 +15,21 @@ import org.testng.xml.XmlSuite;
 import vo.ResultVo;
 import dataretriever.DataForReporter;
 import dataretriever.ResultTable;
-
+/**
+* HTML report generation of the test
+* @author  Senthil vel
+* @version 1.0
+* @since   27-11-2016 
+*/
 public class HtmlReporter implements IReporter {
 	/**
 	 * Data for the reporter
 	 */
 	DataForReporter data = null;
-
+/**
+ * FileName
+ */
+	private String fileName = "test-report.html";
 	/**
 	 * Generates the custom reports
 	 * 
@@ -36,7 +44,7 @@ public class HtmlReporter implements IReporter {
 			ISuite isuite = iSuite.get(0);
 			data = new DataForReporter(isuite, xmlSuite.get(0));
 			isuite.getName();
-			writer = createWriter(name, "test-report.html");
+			writer = createWriter(name, fileName);
 			createHTML(writer);
 			endHTML(writer);
 			createTitleContent(writer);

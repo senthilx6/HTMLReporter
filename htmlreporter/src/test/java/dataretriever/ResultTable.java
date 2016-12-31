@@ -19,7 +19,12 @@ import org.testng.internal.ConstructorOrMethod;
 
 import customannotation.TestCaseInfo;
 import vo.ResultVo;
-
+/**
+* Data Manipulation class
+* @author  Senthil vel
+* @version 1.0
+* @since   27-11-2016 
+*/
 public class ResultTable {
 
 	private HashMap<String, ResultVo> dataMap = null;

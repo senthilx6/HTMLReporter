@@ -13,8 +13,12 @@ import org.testng.annotations.Test;
 
 import customannotation.TestCaseInfo;
 
-//Used to Check the format of the report that is going to be generated
-
+/**
+* Sample test class used to check the format of the test report
+* @author  Senthil vel
+* @version 1.0
+* @since   27-11-2016 
+*/
 public class SampleTest {
 
 	@BeforeSuite

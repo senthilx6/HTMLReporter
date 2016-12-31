@@ -1,5 +1,10 @@
 package vo;
-
+/**
+* Value object class used to set and get data for the report
+* @author  Senthil vel
+* @version 1.0
+* @since   27-11-2016 
+*/
 public class ResultVo {
 
 	private String methodName;
