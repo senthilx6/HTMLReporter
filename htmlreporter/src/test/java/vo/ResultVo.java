@@ -14,13 +14,13 @@ public class ResultVo {
 	
 	private String totalTime;
 	
-	private String result;
+	private dataretriever.ResultTable.result result;
 
-	public String getResult() {
+	public dataretriever.ResultTable.result getResult() {
 		return result;
 	}
 
-	public void setResult(String result) {
+	public void setResult(dataretriever.ResultTable.result result) {
 		this.result = result;
 	}
 

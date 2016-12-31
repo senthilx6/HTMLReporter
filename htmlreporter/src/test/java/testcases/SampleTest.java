@@ -1,5 +1,10 @@
 package testcases;
 
+import org.openqa.selenium.Capabilities;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeSuite;
@@ -36,6 +41,13 @@ public class SampleTest {
 	@Test
 	public void login() {
 		try {
+		//	WebDriver driver = new FirefoxDriver();
+	
+			//  Capabilities cap = ((RemoteWebDriver) driver).getCapabilities();
+			   // String browserName = cap.getBrowserName().toLowerCase();
+			    //System.out.println(browserName);
+			//driver.get("https://www.ubuntu.com/");
+			System.out.println(System.getProperties().keySet());
 			Thread.sleep(7000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
@@ -79,6 +91,17 @@ public class SampleTest {
 	@TestCaseInfo(severity=TestCaseInfo.Severity.LOW, id = "TC-5")
 	@Test
 	public void orderDetails() {
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	@TestCaseInfo(severity=TestCaseInfo.Severity.LOW, id = "TC-6")
+	@Test
+	public void orderDetails1() {
 		try {
 			Thread.sleep(5000);
 		} catch (InterruptedException e) {

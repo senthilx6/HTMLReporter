@@ -1,8 +1,16 @@
 package dataretriever;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import org.testng.ISuite;
 import org.testng.ITestNGMethod;
@@ -71,17 +79,17 @@ public class ResultTable {
 				vo.setStartTime(DataForReporter.totalTimeCaluator(startMilliSeconds));
 				long endMilliSeconds = methods.getTestResult().getEndMillis();
 				vo.setEndTime(DataForReporter.totalTimeCaluator(endMilliSeconds));
-				String status = null;
+				result status = null;
 				switch(methods.getTestResult().getStatus())
 				{
 				case ITestResult.SUCCESS:
-					status = "pass";
+					status = result.PASS;
 					break;
 case ITestResult.FAILURE:
-					status = "fail";
+					status = result.FAIL;
 					break;
 case ITestResult.SKIP:
-status = "skip";
+status = result.SKIP;
 break;
 					
 				}
@@ -101,6 +109,21 @@ break;
 		return dataMap;
 	}
 	
+	
+	public static enum result{
+		PASS("pass"),SKIP("skip"),FAIL("fail");
+		
+		String status;
+		result(String status)
+		{
+			this.status = status;
+		}
+		public String  toString()
+		{
+			return this.status;
+		}
+		
+	}
 	/**
 	 *  returns the size of the data count
 	 * @return
@@ -110,6 +133,39 @@ break;
 		return dataMap.size();
 	}
 	
+	
+	/**
+	 * gets the result data based on the sorted result
+	 */
+	public Map<String, ResultVo> sortBasedOnResult()
+	{
+	Set<Entry<String, ResultVo>> entrySet = dataMap.entrySet();
+	List<Map.Entry<String,ResultVo>> list = new LinkedList<Map.Entry<String,ResultVo>>();
+	list.addAll(entrySet);
+	Collections.sort(list,new Comparator<Map.Entry<String,ResultVo>>() {
+
+		@Override
+		public int compare(Map.Entry<String, ResultVo> firstEntry,
+				Map.Entry<String, ResultVo> secondEntry) {
+			
+			if (firstEntry.getValue().getResult().ordinal() == firstEntry.getValue().getResult().ordinal())
+			{
+				return 0;
+			}
+			else if(firstEntry.getValue().getResult().ordinal() > firstEntry.getValue().getResult().ordinal()){
+			return -1;
+		}
+		else
+		{
+			return 1;
+		}
+	}});
+	Map<String,ResultVo> sortedMap = new LinkedHashMap<String,ResultVo>();
+	for(Map.Entry<String, ResultVo> entry : list){
+		sortedMap.put(entry.getKey(), entry.getValue());
+	}
+	return sortedMap;
+	}
 	
 	/**
 	 *  does the calculation for the process data
