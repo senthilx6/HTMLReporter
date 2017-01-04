@@ -21,9 +21,10 @@ import vo.ResultVo;
 /**
 * Data Manipulation class
 * @author  Senthil vel
-* @version 1.0
+* @version 1.1
 * @since   27-11-2016 
 */
+
 public class ResultTable {
 
 	private HashMap<String, ResultVo> dataMap = null;

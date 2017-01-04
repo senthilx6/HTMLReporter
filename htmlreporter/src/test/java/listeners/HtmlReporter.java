@@ -18,7 +18,7 @@ import dataretriever.ResultTable;
 /**
 * HTML report generation of the test
 * @author  Senthil vel
-* @version 1.0
+* @version 1.1
 * @since   27-11-2016 
 */
 public class HtmlReporter implements IReporter {
@@ -293,6 +293,7 @@ public class HtmlReporter implements IReporter {
 				+ ".attr('data-value',function(d){return d.value});</script>";
 		return script;
 	}
+	
 	
 	private void createTable(BufferedWriter writer, ResultTable tableData) throws IOException
 	{

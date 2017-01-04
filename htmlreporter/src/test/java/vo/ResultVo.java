@@ -2,7 +2,7 @@ package vo;
 /**
 * Value object class used to set and get data for the report
 * @author  Senthil vel
-* @version 1.0
+* @version 1.1
 * @since   27-11-2016 
 */
 public class ResultVo {
@@ -14,7 +14,7 @@ public class ResultVo {
 	private String StartTime;
 
 	private String EndTime;
-	
+
 	private String prioirty;
 	
 	private String totalTime;
