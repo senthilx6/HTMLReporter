@@ -128,7 +128,7 @@ public class HtmlReporter implements IReporter {
 	 * @throws IOException
 	 */
 	private void endHTML(BufferedWriter writer) throws IOException {
-		String startHead = "</body></htm>";
+		String startHead = "</body></html>";
 		writer.write(startHead);
 	}
 
