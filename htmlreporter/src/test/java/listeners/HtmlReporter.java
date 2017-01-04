@@ -98,6 +98,7 @@ public class HtmlReporter implements IReporter {
 	private void createHTML(BufferedWriter writer) throws IOException {
 		String startHead = "<html><head>" // I have used roberto font,Please link the appropriate font
 				+ "<link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>"
+				+"<link href='https://fonts.googleapis.com/icon?family=Material+Icons' rel='stylesheet'>"
 				+cssFileForHtml()
 				+ "</head><script src='https://d3js.org/d3.v4.min.js'></script><body style=' background-color: #F5F5F5'>";
 		writer.write(startHead);
@@ -295,7 +296,7 @@ public class HtmlReporter implements IReporter {
 	
 	private void createTable(BufferedWriter writer, ResultTable tableData) throws IOException
 	{
-		int height = (37*tableData.getDataCount())+55;
+		int height = (37*tableData.getDataCount())+56;
 String container = "<div style='width: 766px;background-color: #FFFFFF;box-shadow: 1px 1px 1px #888888;;height: "+height+"px;position: absolute;top: 165px;left: 554px'>";
 String table = "<table style='top:10px;position:absolute;width: 750px;left:8px;'><tbody>";
 String headers ="<tr><th>TestCase Id</th><th>Method Name</th><th>Servrity</th><th>Time Taken</th><th>Result</th></tr>";
@@ -311,8 +312,21 @@ private void writeTableContents(BufferedWriter writer,ISuite suite , ResultTable
 	String closer = "</tbody></table></div>";
 	dataMap.forEach((key,value)->{
 		String datagenerator = "";
+		String message = value.getExpectionMessage() !=null ? value.getExpectionMessage() :  ""; 
 		datagenerator= "<tr><td>"+value.getTestCaeId()+"</td><td>"+value.getMethodName()+"</td><td>"+value.getPrioirty()+"</td><td>"+value.getTotalTime()+"</td>";
-		datagenerator += value.getResult().toString()=="pass" ? "<td style='color:#4CAF50;font-weight:bold;'>"+value.getResult()+"</td>" : "<td style='color:#F44336; font-weight:bold;'>"+value.getResult()+"</td></tr>";
+
+		switch (value.getResult().toString()) {
+		case "pass":
+			datagenerator+="<td style='color:#4CAF50;font-weight:bold;'>"+value.getResult()+"</td>";	
+			break;
+case "fail":
+	datagenerator+="<td style='color:#EF5350;font-weight:bold;'>"+"<i class='material-icons' style='font-size: 16px;'>&#xE002;</i>"+value.getResult()+"</td>";
+			break;
+			
+case "skip":
+	datagenerator+="<td style='color:#4FC3F7;font-weight:bold;'>"+value.getResult()+"</td>";
+			break;
+		}
 		try {
 			writer.write(datagenerator);
 		} catch (Exception e) {

@@ -19,6 +19,16 @@ public class ResultVo {
 	
 	private String totalTime;
 	
+	private String expectionMessage;
+	
+	public String getExpectionMessage() {
+		return expectionMessage;
+	}
+
+	public void setExpectionMessage(String expectionMessage) {
+		this.expectionMessage = expectionMessage;
+	}
+
 	private dataretriever.ResultTable.result result;
 
 	public dataretriever.ResultTable.result getResult() {

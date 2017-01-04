@@ -1,7 +1,7 @@
 package dataretriever;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -13,7 +13,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.testng.ISuite;
-import org.testng.ITestNGMethod;
 import org.testng.ITestResult;
 import org.testng.internal.ConstructorOrMethod;
 
@@ -83,8 +82,15 @@ public class ResultTable {
 				long startMilliSeconds = methods.getTestResult().getStartMillis();
 				vo.setStartTime(DataForReporter.totalTimeCaluator(startMilliSeconds));
 				long endMilliSeconds = methods.getTestResult().getEndMillis();
+				
+				
 				vo.setEndTime(DataForReporter.totalTimeCaluator(endMilliSeconds));
 				result status = null;
+				Throwable error =methods.getTestResult().getThrowable();
+				if(error!=null)
+				{
+					vo.setExpectionMessage(this.expectionMessage(error));
+				}
 				switch(methods.getTestResult().getStatus())
 				{
 				case ITestResult.SUCCESS:
@@ -178,5 +184,18 @@ break;
 	public void processData()
 	{
 		this.getEntireTableData();
+	}
+	/**
+	 * Returns the Expection thrown by the class
+	 * @param error
+	 * @return
+	 */
+	private String expectionMessage (Throwable error)
+	{ //TODO check the coding Style
+		StringWriter writer = new StringWriter();
+		PrintWriter printer = new PrintWriter(writer);
+		error.printStackTrace(printer);
+		String [] splitMessage = writer.toString().split("\n");
+	return splitMessage[0]+"\n"+splitMessage[1];
 	}
 }
