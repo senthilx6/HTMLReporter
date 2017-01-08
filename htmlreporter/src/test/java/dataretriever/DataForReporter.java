@@ -7,8 +7,6 @@ import java.util.HashMap;
 
 import java.util.Map;
 
-
-
 import org.testng.ISuite;
 import org.testng.ISuiteResult;
 
@@ -19,6 +17,7 @@ public class DataForReporter {
 	XmlSuite xml;
 
 	/**
+	 * Constructor
 	 * 
 	 * @param suite
 	 */
@@ -29,18 +28,38 @@ public class DataForReporter {
 
 	}
 
+	/**
+	 * Gets the suite name
+	 * 
+	 * @return name
+	 */
 	public String getSuiteName() {
 		return suite.getName();
 	}
 
+	/**
+	 * Gets the number of test tags present in the suite
+	 * 
+	 * @return count
+	 */
 	public int getNumberOfTestTags() {
 		return xml.getTests().size();
 	}
 
+	/**
+	 * Gets the number of test
+	 * 
+	 * @return count
+	 */
 	public int getNumberOfTest() {
 		return suite.getAllMethods().size();
 	}
 
+	/**
+	 * Get the total number of time taken for the test to get complete
+	 * 
+	 * @return count
+	 */
 	public Map<String, String> getTotalTime() {
 		Map<String, String> dateValues = new HashMap<String, String>();
 		String pattern = "dd-MM-yyyy HH:mm:ss";
@@ -64,6 +83,11 @@ public class DataForReporter {
 
 	}
 
+	/**
+	 * Convert the milliseconds to time in format of HH:MM:SS
+	 * 
+	 * @return time
+	 */
 	protected static String totalTimeCaluator(long differnces) {
 		long diffSeconds = differnces / 1000 % 60;
 		long diffMinutes = differnces / (60 * 1000) % 60;
@@ -85,6 +109,11 @@ public class DataForReporter {
 		return total;
 	}
 
+	/**
+	 * Gets the number of methods that falls into PASS category
+	 * 
+	 * @return count
+	 */
 	public int getNumberofTestPassed() {
 		int count = 0;
 		for (ISuiteResult results : suite.getResults().values()) {
@@ -94,6 +123,11 @@ public class DataForReporter {
 		return count;
 	}
 
+	/**
+	 * Gets the number of methods that falls into FAIL category
+	 * 
+	 * @return count
+	 */
 	public int getNumberofTestFailed() {
 		int count = 0;
 		for (ISuiteResult results : suite.getResults().values()) {
@@ -103,6 +137,11 @@ public class DataForReporter {
 		return count;
 	}
 
+	/**
+	 * Gets the number of methods that falls into SKIP category
+	 * 
+	 * @return count
+	 */
 	public int getNumberofTestSkipped() {
 		int count = 0;
 		for (ISuiteResult results : suite.getResults().values()) {

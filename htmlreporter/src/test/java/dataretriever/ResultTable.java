@@ -1,7 +1,7 @@
 package dataretriever;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -13,24 +13,34 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.testng.ISuite;
-import org.testng.ITestNGMethod;
 import org.testng.ITestResult;
 import org.testng.internal.ConstructorOrMethod;
 
 import customannotation.TestCaseInfo;
 import vo.ResultVo;
+
 /**
-* Data Manipulation class
-* @author  Senthil vel
-* @version 1.0
-* @since   27-11-2016 
-*/
+ * Data Manipulation class
+ * 
+ * @author Senthil vel
+ * @version 1.1
+ * @since 27-11-2016
+ */
+
 public class ResultTable {
-
+	/**
+	 * dataMap
+	 */
 	private HashMap<String, ResultVo> dataMap = null;
-
+	/**
+	 * suite
+	 */
 	private ISuite suite = null;
-	
+	/**
+	 * expectionMessage
+	 */
+	Map<String, String> expectionMessage = null;
+
 	/**
 	 * 
 	 * @param suite
@@ -40,143 +50,189 @@ public class ResultTable {
 	}
 
 	/**
+	 * Generates the table data and puts the data into a Map
 	 * 
 	 * @param suite
 	 */
 	private void generateTableData() {
 		dataMap = new HashMap<String, ResultVo>();
-		suite.getAllMethods()
-				.forEach(
-						invokedMethods -> {
-							ResultVo value = new ResultVo();
-							String methodName = invokedMethods.getMethodName();
-							ConstructorOrMethod cons = invokedMethods.getConstructorOrMethod();
-							TestCaseInfo caseInfo = cons.getMethod()
-									.getAnnotation(TestCaseInfo.class);
-							if(caseInfo !=null){
-							value.setTestCaeId(caseInfo.id());
-							
-							value.setPrioirty(caseInfo.severity().severity());
-							}
-							else
-							{
-								value.setTestCaeId("-");
-								value.setPrioirty("-");	
-							}
-							value.setMethodName(methodName);
-							dataMap.put(methodName, value);
-						});
+		suite.getAllMethods().forEach(
+				invokedMethods -> {
+					ResultVo value = new ResultVo();
+					String methodName = invokedMethods.getMethodName();
+					ConstructorOrMethod cons = invokedMethods
+							.getConstructorOrMethod();
+					TestCaseInfo caseInfo = cons.getMethod().getAnnotation(
+							TestCaseInfo.class);
+					if (caseInfo != null) {
+						value.setTestCaeId(caseInfo.id());
+
+						value.setPrioirty(caseInfo.severity().severity());
+					} else {
+						value.setTestCaeId("-");
+						value.setPrioirty("-");
+					}
+					value.setMethodName(methodName);
+					dataMap.put(methodName, value);
+				});
 	}
-	
+
 	/**
-	 *  Sets the total time and status of the test case
+	 * Sets the total time and status of the test case
+	 * 
 	 * @param suite
 	 */
-	protected void getEntireTableData()
-	{
+	protected void getEntireTableData() {
+		expectionMessage = new HashMap<>();
 		this.generateTableData();
-		suite.getAllInvokedMethods().stream().forEach(methods->{
-			
-			if (dataMap.containsKey(methods.getTestMethod().getMethodName()))
-			{
-				ResultVo vo = dataMap.get(methods.getTestMethod().getMethodName());
-				long startMilliSeconds = methods.getTestResult().getStartMillis();
-				vo.setStartTime(DataForReporter.totalTimeCaluator(startMilliSeconds));
-				long endMilliSeconds = methods.getTestResult().getEndMillis();
-				vo.setEndTime(DataForReporter.totalTimeCaluator(endMilliSeconds));
-				result status = null;
-				switch(methods.getTestResult().getStatus())
-				{
-				case ITestResult.SUCCESS:
-					status = result.PASS;
-					break;
-case ITestResult.FAILURE:
-					status = result.FAIL;
-					break;
-case ITestResult.SKIP:
-status = result.SKIP;
-break;
-					
-				}
-				vo.setResult(status);
-	long difference = endMilliSeconds - startMilliSeconds;
-	vo.setTotalTime(DataForReporter.totalTimeCaluator(difference));		
-			}
-		});
+		suite.getAllInvokedMethods()
+				.stream()
+				.forEach(
+						methods -> {
+
+							if (dataMap.containsKey(methods.getTestMethod()
+									.getMethodName())) {
+								String methodName = methods.getTestMethod()
+										.getMethodName();
+								ResultVo vo = dataMap.get(methodName);
+								long startMilliSeconds = methods
+										.getTestResult().getStartMillis();
+								vo.setStartTime(DataForReporter
+										.totalTimeCaluator(startMilliSeconds));
+								long endMilliSeconds = methods.getTestResult()
+										.getEndMillis();
+
+								vo.setEndTime(DataForReporter
+										.totalTimeCaluator(endMilliSeconds));
+								result status = null;
+								Throwable error = methods.getTestResult()
+										.getThrowable();
+								if (error != null) {
+									this.expectionMessage(error, methodName);
+								}
+								switch (methods.getTestResult().getStatus()) {
+								case ITestResult.SUCCESS:
+									status = result.PASS;
+									break;
+								case ITestResult.FAILURE:
+									status = result.FAIL;
+									break;
+								case ITestResult.SKIP:
+									status = result.SKIP;
+									break;
+
+								}
+								vo.setResult(status);
+								long difference = endMilliSeconds
+										- startMilliSeconds;
+								vo.setTotalTime(DataForReporter
+										.totalTimeCaluator(difference));
+							}
+						});
 	}
-	
+
 	/**
 	 * gets the result data
+	 * 
 	 * @return
 	 */
-	public  Map<String, ResultVo> getResultData()
-	{
+	public Map<String, ResultVo> getResultData() {
 		return dataMap;
 	}
-	
-	
-	public static enum result{
-		PASS("pass"),SKIP("skip"),FAIL("fail");
-		
+
+	/**
+	 * Enum for test result
+	 * 
+	 * @author Senthil vel
+	 *
+	 */
+	public static enum result {
+		PASS("pass"), SKIP("skip"), FAIL("fail");
+
 		String status;
-		result(String status)
-		{
+
+		result(String status) {
 			this.status = status;
 		}
-		public String  toString()
-		{
+
+		public String toString() {
 			return this.status;
 		}
-		
+
 	}
+
 	/**
-	 *  returns the size of the data count
+	 * returns the size of the data count
+	 * 
 	 * @return
 	 */
-	public  int getDataCount()
-	{
+	public int getDataCount() {
 		return dataMap.size();
 	}
-	
-	
+
 	/**
 	 * gets the result data based on the sorted result
 	 */
-	public Map<String, ResultVo> sortBasedOnResult()
-	{
-	Set<Entry<String, ResultVo>> entrySet = dataMap.entrySet();
-	List<Map.Entry<String,ResultVo>> list = new LinkedList<Map.Entry<String,ResultVo>>();
-	list.addAll(entrySet);
-	Collections.sort(list,new Comparator<Map.Entry<String,ResultVo>>() {
+	public Map<String, ResultVo> sortBasedOnResult() {
+		Set<Entry<String, ResultVo>> entrySet = dataMap.entrySet();
+		List<Map.Entry<String, ResultVo>> list = new LinkedList<Map.Entry<String, ResultVo>>();
+		list.addAll(entrySet);
+		Collections.sort(list, new Comparator<Map.Entry<String, ResultVo>>() {
 
-		@Override
-		public int compare(Map.Entry<String, ResultVo> firstEntry,
-				Map.Entry<String, ResultVo> secondEntry) {
-			
-			if (firstEntry.getValue().getResult().ordinal() == firstEntry.getValue().getResult().ordinal())
-			{
-				return 0;
+			@Override
+			public int compare(Map.Entry<String, ResultVo> firstEntry,
+					Map.Entry<String, ResultVo> secondEntry) {
+
+				if (firstEntry.getValue().getResult().ordinal() == firstEntry
+						.getValue().getResult().ordinal()) {
+					return 0;
+				} else if (firstEntry.getValue().getResult().ordinal() > firstEntry
+						.getValue().getResult().ordinal()) {
+					return -1;
+				} else {
+					return 1;
+				}
 			}
-			else if(firstEntry.getValue().getResult().ordinal() > firstEntry.getValue().getResult().ordinal()){
-			return -1;
+		});
+		Map<String, ResultVo> sortedMap = new LinkedHashMap<String, ResultVo>();
+		for (Map.Entry<String, ResultVo> entry : list) {
+			sortedMap.put(entry.getKey(), entry.getValue());
 		}
-		else
-		{
-			return 1;
-		}
-	}});
-	Map<String,ResultVo> sortedMap = new LinkedHashMap<String,ResultVo>();
-	for(Map.Entry<String, ResultVo> entry : list){
-		sortedMap.put(entry.getKey(), entry.getValue());
+		return sortedMap;
 	}
-	return sortedMap;
-	}
-	
+
 	/**
-	 *  does the calculation for the process data
+	 * does the calculation for the process data
 	 */
-	public void processData()
-	{
+	public void processData() {
 		this.getEntireTableData();
+	}
+
+	/**
+	 * Returns the Expection thrown by the class
+	 * 
+	 * @param error
+	 * @return
+	 */
+	private void expectionMessage(Throwable error, String methodName) { // TODO
+																		// check
+																		// the
+																		// coding
+																		// Style
+		StringWriter writer = new StringWriter();
+		PrintWriter printer = new PrintWriter(writer);
+		error.printStackTrace(printer);
+		String[] splitMessage = writer.toString().split("\n");
+		expectionMessage.put(methodName, splitMessage[0] + "\n"
+				+ splitMessage[1]);
+	}
+
+	/**
+	 * returns the map which have exception data
+	 * 
+	 * @return
+	 */
+	public Map<String, String> getExpectionMessageData() {
+		return expectionMessage;
 	}
 }

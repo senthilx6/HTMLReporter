@@ -1,6 +1,5 @@
 package listeners;
 
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -15,21 +14,24 @@ import org.testng.xml.XmlSuite;
 import vo.ResultVo;
 import dataretriever.DataForReporter;
 import dataretriever.ResultTable;
+
 /**
-* HTML report generation of the test
-* @author  Senthil vel
-* @version 1.0
-* @since   27-11-2016 
-*/
+ * HTML report generation of the test
+ * 
+ * @author Senthil vel
+ * @version 1.1
+ * @since 27-11-2016
+ */
 public class HtmlReporter implements IReporter {
 	/**
 	 * Data for the reporter
 	 */
 	DataForReporter data = null;
-/**
- * FileName
- */
+	/**
+	 * FileName
+	 */
 	private String fileName = "test-report.html";
+
 	/**
 	 * Generates the custom reports
 	 * 
@@ -53,8 +55,9 @@ public class HtmlReporter implements IReporter {
 			createChart(writer);
 			ResultTable table = new ResultTable(isuite);
 			table.processData();
-			createTable(writer , table);
-			writeTableContents(writer,isuite,table);
+			createTable(writer, table);
+			writeTableContents(writer, isuite, table);
+			createExpectionalClassDiv(writer, table);
 			endHTML(writer);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -70,7 +73,7 @@ public class HtmlReporter implements IReporter {
 	}
 
 	/**
-	 * 
+	 * Creation  of test-report.html in the specified path
 	 * @param filepath
 	 * @return bufferWriter
 	 * @throws IOException
@@ -96,30 +99,34 @@ public class HtmlReporter implements IReporter {
 	 * @throws IOException
 	 */
 	private void createHTML(BufferedWriter writer) throws IOException {
-		String startHead = "<html><head>" // I have used roberto font,Please link the appropriate font
+		String startHead = "<html><head>" // I have used roberto font,Please
+											// link the appropriate font
 				+ "<link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>"
-				+cssFileForHtml()
+				+ "<link href='https://fonts.googleapis.com/icon?family=Material+Icons' rel='stylesheet'>"
+				+ cssFileForHtml()
 				+ "</head><script src='https://d3js.org/d3.v4.min.js'></script><body style=' background-color: #F5F5F5'>";
 		writer.write(startHead);
 	}
-
-	private String cssFileForHtml()
-	{
-		return "<style>table, td, th {"+    
-		    "border: 1px solid #ddd;"+
-	    "text-align: left;}"+
-	"table {"+
-	    "border-collapse: collapse;"+
-	    "width: 100%;}"+
-	"th, td {"+
-	    "padding: 10px;"+
-	    "color:#000000;"+
-	    "font-family: 'Roboto', sans-serif;}td{"+
-	    "font-size: smaller;}"
-	    + "th{background-color:#EEEEEE;color:#000000;}tr{background-color:#FFFFFF;}"
-	    + "tr:hover{background-color:#EEEEEE}</style>";
+/**
+ *  CSS file for the table
+ * @return
+ */
+	private String cssFileForHtml() {
+		return "<style>table, td, th {"
+				+ "border: 1px solid #ddd;"
+				+ "text-align: left;}"
+				+ "table {"
+				+ "border-collapse: collapse;"
+				+ "width: 100%;}"
+				+ "th, td {"
+				+ "padding: 10px;"
+				+ "color:#000000;"
+				+ "font-family: 'Roboto', sans-serif;}td{"
+				+ "font-size: smaller;}"
+				+ "th{background-color:#EEEEEE;color:#000000;}tr{background-color:#FFFFFF;}"
+				+ "tr:hover{background-color:#EEEEEE}</style>";
 	}
-	
+
 	/**
 	 * Used to finish the HTML
 	 * 
@@ -127,13 +134,12 @@ public class HtmlReporter implements IReporter {
 	 * @throws IOException
 	 */
 	private void endHTML(BufferedWriter writer) throws IOException {
-		String startHead = "</body></htm>";
+		String startHead = "</body></html>";
 		writer.write(startHead);
 	}
 
 	/**
-	 * writes the title area which contain the name
-	 * 
+	 * writes the title area which contain the name 
 	 * @param writer
 	 * @throws IOException
 	 */
@@ -142,13 +148,14 @@ public class HtmlReporter implements IReporter {
 		String titleTag = "<div style='height: 50px; width: inherit;    box-shadow: 1px 1px 1px #888888;background-color: #616161;'>";
 		String label = "<label style='font-weight: bold;position: absolute;padding-left: 16px;color: white;padding-top: 8px;"
 				+ "font-family: Roboto, sans-serif;'>"
-				+ title + "</label></div>";
+				+ title
+				+ "</label></div>";
 		writer.write(titleTag);
 		writer.write(label);
 	}
 
 	/**
-	 * 
+	 *  Parent function for creating container and number of test tag and test methods
 	 * @param writer
 	 * @throws IOException
 	 */
@@ -167,7 +174,7 @@ public class HtmlReporter implements IReporter {
 	}
 
 	/**
-	 * 
+	 *  Writes the number of test tags present in the result
 	 * @param writer
 	 * @throws IOException
 	 */
@@ -180,7 +187,7 @@ public class HtmlReporter implements IReporter {
 	}
 
 	/**
-	 * 
+	 *  Writes the total number of test methods present
 	 * @param writer
 	 * @throws IOException
 	 */
@@ -192,7 +199,11 @@ public class HtmlReporter implements IReporter {
 				+ data.getNumberOfTest() + "</span></label>";
 		writer.write(parent + content + total);
 	}
-
+/**
+ * Creates the total time spent for the test to get finished
+ * @param writer
+ * @throws IOException
+ */
 	private void createTotalTime(BufferedWriter writer) throws IOException {
 		Map<String, String> dataMap = data.getTotalTime();
 		String parent = "<div style='width: 260px;background-color: #FFFFFF;box-shadow: 1px 1px 1px #888888;height: 85px;position: absolute;top: 67px;left: 281px;'>";
@@ -239,7 +250,7 @@ public class HtmlReporter implements IReporter {
 	}
 
 	/**
-	 * 
+	 *  JavaScript function for creating bar-chart
 	 * @return chartScript
 	 */
 	private String generateChart() {
@@ -292,35 +303,104 @@ public class HtmlReporter implements IReporter {
 				+ ".attr('data-value',function(d){return d.value});</script>";
 		return script;
 	}
-	
-	private void createTable(BufferedWriter writer, ResultTable tableData) throws IOException
-	{
-		int height = (37*tableData.getDataCount())+55;
-String container = "<div style='width: 766px;background-color: #FFFFFF;box-shadow: 1px 1px 1px #888888;;height: "+height+"px;position: absolute;top: 165px;left: 554px'>";
-String table = "<table style='top:10px;position:absolute;width: 750px;left:8px;'><tbody>";
-String headers ="<tr><th>TestCase Id</th><th>Method Name</th><th>Servrity</th><th>Time Taken</th><th>Result</th></tr>";
+/**
+ *  Creates the table for writing individual test result
+ * @param writer
+ * @param tableData
+ * @throws IOException
+ */
+	private void createTable(BufferedWriter writer, ResultTable tableData)
+			throws IOException {
+		int height = (37 * tableData.getDataCount()) + 56
+				+ (tableData.getExpectionMessageData().size() * 4);
+		String container = "<div style='width: 766px;background-color: #FFFFFF;box-shadow: 1px 1px 1px #888888;;height: "
+				+ height + "px;position: absolute;top: 165px;left: 554px'>";
+		String table = "<table style='top:10px;position:absolute;width: 750px;left:8px;'><tbody>";
+		String headers = "<tr><th>TestCase Id</th><th>Method Name</th><th>Servrity</th><th>Time Taken</th><th>Result</th></tr>";
 
-writer.write(container+table+headers);
+		writer.write(container + table + headers);
 
 	}
-	
-private void writeTableContents(BufferedWriter writer,ISuite suite , ResultTable table)	 throws IOException
-{
-	
-	Map<String, ResultVo> dataMap = table.getResultData();
-	String closer = "</tbody></table></div>";
-	dataMap.forEach((key,value)->{
-		String datagenerator = "";
-		datagenerator= "<tr><td>"+value.getTestCaeId()+"</td><td>"+value.getMethodName()+"</td><td>"+value.getPrioirty()+"</td><td>"+value.getTotalTime()+"</td>";
-		datagenerator += value.getResult().toString()=="pass" ? "<td style='color:#4CAF50;font-weight:bold;'>"+value.getResult()+"</td>" : "<td style='color:#F44336; font-weight:bold;'>"+value.getResult()+"</td></tr>";
-		try {
-			writer.write(datagenerator);
-		} catch (Exception e) {
-			e.printStackTrace();
+/**
+ *  Writes the Tables contents which has individual test results
+ * @param writer
+ * @param suite
+ * @param table
+ * @throws IOException
+ */
+	private void writeTableContents(BufferedWriter writer, ISuite suite,
+			ResultTable table) throws IOException {
+
+		Map<String, ResultVo> dataMap = table.getResultData();
+		String closer = "</tbody></table></div>";
+		dataMap.forEach((key, value) -> {
+			String datagenerator = "";
+			String message = value.getExpectionMessage() != null ? value
+					.getExpectionMessage() : "";
+			System.out.println(message);
+			datagenerator = "<tr><td>" + value.getTestCaeId() + "</td><td>"
+					+ value.getMethodName() + "</td><td>" + value.getPrioirty()
+					+ "</td><td>" + value.getTotalTime() + "</td>";
+
+			switch (value.getResult().toString()) {
+			case "pass":
+				datagenerator += "<td style='color:#4CAF50;font-weight:bold;'>"
+						+ value.getResult() + "</td>";
+				break;
+			case "fail":
+				datagenerator += "<td style='color:#EF5350;font-weight:bold;'>"
+						+ "<i class='material-icons' style='font-size: 16px;'>&#xE002;</i><span>"
+						+ value.getResult() + "</span></td>";
+				break;
+
+			case "skip":
+				datagenerator += "<td style='color:#4FC3F7;font-weight:bold;'>"
+						+ value.getResult() + "</td>";
+				break;
+			}
+			try {
+				writer.write(datagenerator);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		});
+		writer.write(closer);
+	}
+
+	/**
+	 *  Writes the class with exception test method with type of exception thrown
+	 * @param writer
+	 * @param table
+	 * @throws IOException
+	 */
+	private void createExpectionalClassDiv(BufferedWriter writer,
+			ResultTable table) throws IOException {
+		Map<String, String> data = table.getExpectionMessageData();
+		int size = table.getExpectionMessageData().size();
+
+		if (size != 0) {
+			int height = ((size - 1) * 77) + 120;
+			String container = "<div style='width: 533px;background-color: #FFFFFF;box-shadow: 1px 1px 1px #888888;height: "
+					+ height + "px;position: absolute;top: 480px;'>";
+			String expectionalLabel = "<label style='font-weight: bold;position: absolute;padding-left: 8px;color: black;padding-top: 8px;font-family: Roboto, sans-serif;'>Expectional Test Method</label>";
+			int count = 0;
+			String messageContainer = "", methodName = "", expectionMessage = "";
+			writer.write(container + expectionalLabel);
+			for (Map.Entry<String, String> entry : data.entrySet()) {
+				int top = 30 + (82 * count);
+				messageContainer = "<div style='top: "
+						+ top
+						+ "px;position: absolute;width: 451px;height: 75px;background-color: #f8f9fa;margin-left: 36px;border :1px solid #ebedef;border-radius:4px;'>";
+				methodName = "<span style='display: block;margin-left: 4px;margin-top: 4px;font-family: Roboto, sans-serif;'>"
+						+ entry.getKey() + "</span>";
+				expectionMessage = "<span style='margin-top: 4px;position: absolute;margin-left: 8px;font-family: Roboto, sans-serif;color: #F44336;font-size: small;font-weight: bold;'>"
+						+ entry.getValue() + "</span></div>";
+				count++;
+				writer.write(messageContainer + methodName + expectionMessage);
+			}
+			String containerClose = "<div>";
+			writer.write(containerClose);
 		}
-	});
-	writer.write(closer);	
-}
-	
-	
+	}
+
 }
