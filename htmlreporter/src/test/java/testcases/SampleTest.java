@@ -1,5 +1,8 @@
 package testcases;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -64,10 +67,12 @@ public class SampleTest {
 	@Test
 	public void signUp() {
 		try {
+			Integer c =null;
+			int sum = c+7;
 			Thread.sleep(5000);
-		} catch (InterruptedException e) {
+		} catch (InterruptedException  e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+
 		}
 	}
 	
@@ -75,6 +80,8 @@ public class SampleTest {
 	@Test
 	public void accountDetails() {
 		try {
+			Integer c =null;
+			int sum = c+7;
 			Thread.sleep(5000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
@@ -85,7 +92,10 @@ public class SampleTest {
 	@Test
 	public void paymentDetails() {
 		try {
-			Thread.sleep(5000);
+			Thread.sleep(100000);
+			Integer c =null;
+			int sum = c+7;
+			
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -96,7 +106,7 @@ public class SampleTest {
 	@Test
 	public void orderDetails() {
 		try {
-			Thread.sleep(5000);
+			Thread.sleep(10000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -107,7 +117,7 @@ public class SampleTest {
 	@Test
 	public void orderDetails1() {
 		try {
-			Thread.sleep(5000);
+			Thread.sleep(10000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
