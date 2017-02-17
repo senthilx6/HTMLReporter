@@ -300,7 +300,7 @@ public class HtmlReporter implements IReporter {
 				+ ".attr('width', 50)"
 				+ ".attr('height', function(d) { return height - y(d.value); }).attr('fill','#ff9900')"
 				+ ".attr('data-name',function(d){return d.name})"
-				+ ".attr('data-value',function(d){return d.value});</script>";
+				+ ".attr('data-value',function(d){return d.value}).attr('height', 0).transition().duration(1000).delay(200).attr('height', function (d, i) {return height - y(d.value);});;</script>";
 		return script;
 	}
 /**
